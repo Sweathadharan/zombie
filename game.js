@@ -76,24 +76,32 @@ function destroyZombie(zombie) {
 
 // Iteration 5: Creating timer
 
-
- timer = setInterval(function () {
+let misses = 0;
+timer = setInterval(function () {
     seconds--;
+    if (seconds <= 0) {
+        clearInterval(timer);
+        if (seconds < 0) {
+            return;
+        }
+        if (lives == 0) {
+            location.href = "./game-over.html";
+            return;
+        }
+        location.href = "./win.html";
+        return;
+    }
     document.getElementById("timer").textContent = seconds;
     let zombie = document.getElementById("zombie" + zombieId);
-    if (missed(zombie) == true) {
+    if (missed(zombie)) {
         destroyZombie(zombie);
-      if (lives == 0) {
-        clearInterval(timer);
-        location.href = "./game-over.html";
-      }
+        misses++;
+        if (misses >= 4) {
+            clearInterval(timer);
+            location.href = "./game-over.html";
+        }
     }
-    if (seconds == 0) {
-      clearInterval(timer);
-      location.href = "./win.html";
-    }
-  }, 1000);
-   
+}, 1000);
 
 // Iteration 6: Write a code to start the game by calling the first zombie 
 makeZombie(zombieId);
